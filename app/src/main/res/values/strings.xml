@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ShopManagement</string>
+    <string name="lien">Lien</string>
+    <string name="systemlogo">systemLogo</string>
 </resources>
