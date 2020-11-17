@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Dashboard"/>
+        <activity android:name=".FeedbackAndSupport"></activity>
+        <activity android:name=".TermsAndCondition" />
+        <activity android:name=".Settings" />
+        <activity android:name=".Dashboard" />
         <activity android:name=".Register" />
         <activity android:name=".SignIn" />
         <activity android:name=".SplashScreen">
