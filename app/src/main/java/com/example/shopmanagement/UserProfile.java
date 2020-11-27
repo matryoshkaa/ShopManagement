@@ -1,39 +1,39 @@
 package com.example.shopmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
-public class Dashboard extends AppCompatActivity {
+public class UserProfile extends AppCompatActivity {
 
     ImageButton settings;
-    ImageButton profile;
+    ImageButton back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_user_profile);
 
-        settings= findViewById(R.id.settingsButton);
-        profile= findViewById(R.id.profileButton);
+        settings=findViewById(R.id.settingsButton);
+        back=findViewById(R.id.backButton);
 
         //settings button
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i=new Intent();
-                startActivity(new Intent(Dashboard.this, Settings.class));
+                startActivity(new Intent(UserProfile.this, Settings.class));
             }
         });
 
-        //profile button
-        profile.setOnClickListener(new View.OnClickListener() {
+        //back button
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent();
-                startActivity(new Intent(Dashboard.this, UserProfile.class));
+                finish();
             }
         });
     }

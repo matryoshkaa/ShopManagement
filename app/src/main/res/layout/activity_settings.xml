@@ -27,17 +27,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:layout_width="300dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
             android:fontFamily="@font/montserrat"
-            android:gravity="center"
-            android:layout_marginStart="1dp"
-            android:layout_marginLeft="1dp"
-            android:layout_marginEnd="1dp"
-            android:layout_marginRight="1dp"
-            android:text="@string/settings"
-            android:textColor="#FFFF"
-            android:textSize="24sp" />
+            android:textColor="#000000"
+            android:textSize="22dp"
+            android:layout_gravity="center"
+            android:id="@+id/toolbar_title" />
 
 
     </androidx.appcompat.widget.Toolbar>

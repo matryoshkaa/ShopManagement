@@ -13,7 +13,21 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="settings">Settings</string>
-    <string name="feedback_amp_support"><![CDATA[Feedback & Support]]></string>
+    <string name="feedback_amp_support"><![CDATA[Feedback and Support]]></string>
     <string name="logout">Logout</string>
-    <string name="terms_amp_condition"><![CDATA[Terms & Condition]]></string>
+    <string name="terms_amp_condition"><![CDATA[Terms and Condition]]></string>
+    <string name="feedbackEnter">Please enter your feedback</string>
+    <string name="story">Use the form below to send us your comments or report any problems you may have experienced using Lien.</string>
+    <string name="feedback_and_support">Feedback and Support</string>
+    <string name="we_are_always_keen_in_learning_more_on_how_we_can_improve_our_application">We are always keen in learning more on how we can improve our application!</string>
+    <string name="submit_feedback">Submit feedback</string>
+    <string name="termsAndCondition">
+Last updated [ 27/11/2020 ]\n\nPlease read these Terms and Conditions carefully before using
+the application (the "Service") operated by the Lien team.
+Your access to and use of the Service is conditioned on your acceptance of and compliance with
+these terms. These terms apply to all visitors, users and others who access or use the service.\n\nIf you wish to purchase any product or service made available through the service,
+you may be asked to supply certain information relevant to your purchase.
+\n\nOur service allows you to save, link, store, share certain information,text or other material ("Content"). Unless otherwise indicated, the Application is our property and all source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics on the Application owned or controlled by us or licensed to us, and are protected by copyright and trademark laws\n\nWe respect the intellectual property rights of others. If you believe that any material available on or through the Application infringes upon any copyright you own or control, please immediately notify our company.\n\nWe reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a
+revision in material is brought up, we will try to provide a notice prior to at least 30 days what constitutes a material change will be determined at our sole discretion. \n\nIf you have any questions about these Terms, please contact us.
+    </string>
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Dashboard"
+    tools:context=".UserProfile"
     android:background="#ffffff">
 
     <androidx.appcompat.widget.Toolbar
@@ -12,7 +12,9 @@
         android:layout_width="450dp"
         android:layout_height="59dp"
         android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
         android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
         android:background="@color/appColor"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
@@ -27,22 +29,22 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginStart="172dp"
         android:layout_marginEnd="181dp"
         android:fontFamily="@font/montserrat"
-        android:text="Dashboard"
-        android:layout_gravity="center"
+        android:text="Profile"
         android:textColor="#000000"
-        android:textSize="22dp"
+        android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.438"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.02" />
 
     <ImageButton
-        android:id="@+id/settingsButton"
+        android:id="@+id/backButton"
         android:layout_width="33dp"
         android:layout_height="35dp"
         android:background="#00FFFFFF"
@@ -53,12 +55,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.02"
-        app:srcCompat="@drawable/settings_icon"
-        tools:ignore="VectorDrawableCompat"
-        android:contentDescription="@string/todo" />
+        app:srcCompat="@drawable/back_button"
+        tools:ignore="VectorDrawableCompat" />
 
     <ImageButton
-        android:id="@+id/profileButton"
+        android:id="@+id/settingsButton"
         android:layout_width="33dp"
         android:layout_height="35dp"
         android:background="#00FFFFFF"
@@ -69,7 +70,6 @@
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.021"
-        app:srcCompat="@drawable/ic_profile"
-        tools:ignore="VectorDrawableCompat"
-        android:contentDescription="@string/todo"/>
+        app:srcCompat="@drawable/settings_icon"
+        tools:ignore="VectorDrawableCompat" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,115 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FeedbackAndSupport">
+    tools:context=".FeedbackAndSupport"
+    android:background="#ffff">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="430dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/appColor"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UnknownIdInLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
+            android:fontFamily="@font/montserrat"
+            android:layout_gravity="center"
+            android:text="@string/feedback_and_support"
+            android:textColor="#000000"
+            android:textSize="22dp" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/intro"
+        android:layout_width="305dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="504dp"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:text="@string/we_are_always_keen_in_learning_more_on_how_we_can_improve_our_application"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/intro_sec"
+        android:layout_width="315dp"
+        android:layout_height="98dp"
+        android:layout_marginTop="56dp"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:text="@string/story"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.191" />
+
+    <EditText
+        android:id="@+id/form"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/textbox"
+        android:ems="10"
+        android:gravity="top|left"
+        android:fontFamily="@font/montserrat"
+        android:hint="@string/feedbackEnter"
+        android:inputType="textMultiLine|textNoSuggestions"
+        android:minLines="5"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/intro_sec"
+        app:layout_constraintVertical_bias="0.192"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/save_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginBottom="116dp"
+        android:background="@drawable/round_black_rect"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/submit_feedback"
+        android:textColor="#ffffff"
+        android:textAllCaps="false"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/form"
+        app:layout_constraintVertical_bias="0.222" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
