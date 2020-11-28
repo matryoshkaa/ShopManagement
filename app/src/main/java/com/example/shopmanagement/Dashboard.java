@@ -8,33 +8,44 @@ import android.widget.ImageButton;
 
 public class Dashboard extends AppCompatActivity {
 
-    ImageButton settings;
-    ImageButton profile;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        settings= findViewById(R.id.settingsButton);
-        profile= findViewById(R.id.profileButton);
 
-        //settings button
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent();
-                startActivity(new Intent(Dashboard.this, Settings.class));
-            }
-        });
 
-        //profile button
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent();
-                startActivity(new Intent(Dashboard.this, UserProfile.class));
-            }
-        });
+
+
+    }
+
+    public void goToSettings (View view){
+        Intent i=new Intent();
+        startActivity(new Intent(Dashboard.this, Settings.class));
+    }
+
+    public void goToProducts (View view){
+        Intent i=new Intent();
+        startActivity(new Intent(Dashboard.this, Products.class));
+    }
+
+    public void goToTransactions (View view){
+        Intent i=new Intent();
+        startActivity(new Intent(Dashboard.this, Transactions.class));
+    }
+
+    public void goToStock (View view){
+        Intent i=new Intent();
+        startActivity(new Intent(Dashboard.this, Stock.class));
+    }
+
+    public void goToReports (View view){
+        Intent i=new Intent();
+        startActivity(new Intent(Dashboard.this, SalesReports.class));
+    }
+
+    public void goToStore (View view){
+        Intent i=new Intent();
+        startActivity(new Intent(Dashboard.this, Store.class));
     }
 }

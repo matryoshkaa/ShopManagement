@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +48,10 @@ public class Settings extends AppCompatActivity {
 
     public void goToFeedbackAndSupport (View view){
         startActivity(new Intent(this, FeedbackAndSupport.class));
+    }
+
+    public void goToProfile (View view){
+        startActivity(new Intent(this, UserProfile.class));
     }
 
     public void logout (View view){

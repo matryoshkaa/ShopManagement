@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Settings"
+            android:text="@string/settings"
             android:fontFamily="@font/montserrat"
             android:textColor="#000000"
             android:textSize="22dp"
@@ -73,7 +73,8 @@
             android:paddingStart="15dp"
             android:text="@string/feedback_amp_support"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="RtlSymmetry" />
     </LinearLayout>
 
     <LinearLayout
@@ -110,7 +111,46 @@
             android:paddingStart="15dp"
             android:text="@string/terms_amp_condition"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="goToProfile"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="10">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_profile"
+                app:tint="#00CAFF"
+                android:contentDescription="@string/todo" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/profile"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="90"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center_vertical"
+            android:paddingStart="15dp"
+            android:text="@string/user_profile"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            tools:ignore="RtlSymmetry" />
     </LinearLayout>
 
     <LinearLayout
@@ -147,7 +187,8 @@
             android:paddingStart="15dp"
             android:text="@string/logout"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="RtlSymmetry" />
     </LinearLayout>
 
 

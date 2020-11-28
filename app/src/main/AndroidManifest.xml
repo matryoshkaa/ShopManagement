@@ -9,19 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserProfile"/>
+        <activity android:name=".Stock"></activity>
+        <activity android:name=".SalesReports" />
+        <activity android:name=".Store" />
+        <activity android:name=".Transactions" />
+        <activity android:name=".Products" />
+        <activity android:name=".UserProfile" />
         <activity android:name=".FeedbackAndSupport" />
         <activity android:name=".TermsAndCondition" />
         <activity android:name=".Settings" />
-        <activity android:name=".Dashboard" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Dashboard">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Register" />
         <activity android:name=".SignIn" />
-        <activity android:name=".SplashScreen"/>
+        <activity android:name=".SplashScreen" />
     </application>
 
 </manifest>

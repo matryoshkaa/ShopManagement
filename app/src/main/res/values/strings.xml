@@ -12,7 +12,6 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="settings">Settings</string>
     <string name="feedback_amp_support"><![CDATA[Feedback and Support]]></string>
     <string name="logout">Logout</string>
     <string name="terms_amp_condition"><![CDATA[Terms and Condition]]></string>
@@ -30,4 +29,13 @@ you may be asked to supply certain information relevant to your purchase.
 \n\nOur service allows you to save, link, store, share certain information,text or other material ("Content"). Unless otherwise indicated, the Application is our property and all source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics on the Application owned or controlled by us or licensed to us, and are protected by copyright and trademark laws\n\nWe respect the intellectual property rights of others. If you believe that any material available on or through the Application infringes upon any copyright you own or control, please immediately notify our company.\n\nWe reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a
 revision in material is brought up, we will try to provide a notice prior to at least 30 days what constitutes a material change will be determined at our sole discretion. \n\nIf you have any questions about these Terms, please contact us.
     </string>
+    <string name="settings">Settings</string>
+    <string name="user_profile">User Profile</string>
+    <string name="sale_reports">Sale Reports</string>
+    <string name="stock">Stock</string>
+    <string name="store">Store</string>
+    <string name="transactions">Transactions</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="products">Products</string>
+
 </resources>
