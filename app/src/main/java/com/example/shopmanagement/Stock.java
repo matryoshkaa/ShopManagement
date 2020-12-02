@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -105,6 +108,8 @@ public class Stock extends AppCompatActivity {
         ref = db.collection("Users")
                 .document(userId)
                 .collection("Stock");
+
+
 
 
         //grabbing data from firestore to display in list
