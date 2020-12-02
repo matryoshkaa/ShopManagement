@@ -2,6 +2,9 @@ package com.example.shopmanagement;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +15,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -36,27 +41,23 @@ public class AddToStore extends AppCompatActivity {
 
     Map<String, Object> map;
 
-    TextView productName;
-    TextView supplier;
-    TextView unitCost;
-    TextView prodtax;
-    TextView shipping;
-    TextView marketingCost;
-    TextView storagePrice;
-    TextView costPrice;
-    TextView unitsAvailable;
-    TextView sellingPriceTV;
 
-    EditText productBenefit;
-    EditText productDiscount;
-
-    double profit=0.0;
-    double discount=0.0;
-    double sellingPrice=0.0;
     double totalProductCostPrice=0.0;
+    double marketingExpenses=0.0;
+    double storageExpenses=0.0;
+
 
     String imageUrl;
+    String prodName;
     ImageView prodImageView;
+
+    TextView productName;
+    TextView supplier;
+    String price;
+    String supplierName;
+    String tax;
+    String shipping;
+    String productAmount;
 
 
     @Override
@@ -70,26 +71,18 @@ public class AddToStore extends AppCompatActivity {
 
         productName=findViewById(R.id.prodName);
         supplier=findViewById(R.id.supplierName);
-        unitCost=findViewById(R.id.unitPrice);
-        prodtax=findViewById(R.id.tax);
-        shipping=findViewById(R.id.shippingPrice);
-        marketingCost=findViewById(R.id.marketingCost);
-        storagePrice=findViewById(R.id.storagePrice);
-        costPrice=findViewById(R.id.costPrice);
-        unitsAvailable=findViewById(R.id.unitsAvailable);
-//        productBenefit=findViewById(R.id.productBenefit);
-//        productDiscount=findViewById(R.id.productDiscount);
-//        sellingPriceTV=findViewById(R.id.sellingPrice);
-
         prodImageView=findViewById(R.id.prodImageView);
 
+        BottomNavigationView navBar = findViewById(R.id.navbar);
+        navBar.setOnNavigationItemSelectedListener(navListener);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.info_frame,
+                new ProdDescriptionFragment()).commit();
 
         db = FirebaseFirestore.getInstance();
         ref = db.collection("Users")
                 .document(userId)
                 .collection("Stock");
-
-
 
 
         //grabbing data from firestore to display in list
@@ -99,15 +92,16 @@ public class AddToStore extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         map = document.getData();
-                        String prodName = map.get("productName").toString();
-                        String supplierName = map.get("supplierName").toString();
-                        String price = map.get("unitPrice").toString();
-                        String tax = map.get("productTax").toString();
-                        String shipping = map.get("shippingPrice").toString();
-                        String productAmount = map.get("productAmount").toString();
+                        prodName = map.get("productName").toString();
+                        supplierName = map.get("supplierName").toString();
+                        price = map.get("unitPrice").toString();
+                        tax = map.get("productTax").toString();
+                        shipping = map.get("shippingPrice").toString();
+                        productAmount = map.get("productAmount").toString();
                         imageUrl=map.get("productImage").toString();
 
                         imageRetrieval(imageUrl);
+
                         setDetails(prodName, supplierName,price,tax,shipping,productAmount);
 
                     }
@@ -119,6 +113,31 @@ public class AddToStore extends AppCompatActivity {
 
 
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment = null;
+                    switch (item.getItemId()) {
+                        case R.id.nav_prod_info:{
+                            selectedFragment = new ProdInfoFragment();
+                            sendDataToFragmentOne(selectedFragment);
+                            }
+                            break;
+                        case R.id.nav_add:
+                            selectedFragment = new AddToStoreFragment();
+                            sendDataToFragmentTwo(selectedFragment);
+                            break;
+                        case R.id.nav_help:
+                            selectedFragment = new ProdDescriptionFragment();
+                            break;
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.info_frame,
+                            selectedFragment).commit();
+                    return true;
+                }
+            };
 
     private void imageRetrieval(String imageUrl){
         //image retrieval from db
@@ -161,50 +180,40 @@ public class AddToStore extends AppCompatActivity {
 
         productName.setText(prodName);
         supplier.setText(supplierName);
-        unitCost.setText(unitPrice);
-        prodtax.setText(prodTax);
-        shipping.setText(shippingPrice);
-        unitsAvailable.setText(prodAmount);
 
-        double marketingExpenses=(Double.parseDouble(unitPrice)*2);
-        double storageExpenses=(Double.parseDouble(prodAmount)*2);
-        double totalCostPrice=(Double.parseDouble(prodAmount)*2);
-
-        marketingCost.setText(Double.toString(marketingExpenses));
-        storagePrice.setText(Double.toString(storageExpenses));
+        marketingExpenses=(Double.parseDouble(unitPrice)*2);
+        storageExpenses=(Double.parseDouble(prodAmount)*2);
 
         totalProductCostPrice=(Double.parseDouble(unitPrice))+(Double.parseDouble(prodTax))+(Double.parseDouble(shippingPrice))+marketingExpenses+storageExpenses;
-        costPrice.setText(Double.toString(totalProductCostPrice));
 
 
     }
 
-    public double setSellingPrice(){
-
-        if(!productBenefit.getText().toString().isEmpty())
-            profit=Double.parseDouble(String.valueOf(productBenefit.getText()));
-
-        sellingPrice=(totalProductCostPrice)+((profit/100)*totalProductCostPrice);
-
-        if(!productDiscount.getText().toString().isEmpty()){
-            discount=Double.parseDouble(String.valueOf(productDiscount.getText()));
-            sellingPrice=sellingPrice-(sellingPrice*(discount/100));
-        }
-            return sellingPrice;
-
+    private void sendDataToFragmentTwo(Fragment fragment)
+    {
+        //sending data to product info fragment
+        Bundle b = new Bundle();
+        b.putDouble("totalCP", totalProductCostPrice);
+        fragment.setArguments(b);
     }
 
-    public void calculateTotalSellingPrice(View view){
+    private void sendDataToFragmentOne(Fragment fragment)
+    {
+        //sending data to product info fragment
+        Bundle b = new Bundle();
+        b.putString("unitPrice", price);
+        b.putString("productTax", tax);
+        b.putString("shippingPrice", shipping);
+        b.putString("productAmount", productAmount);
+        b.putDouble("marketingPrice", marketingExpenses);
+        b.putDouble("storagePrice", storageExpenses);
+        b.putDouble("totalCP", totalProductCostPrice);
+        b.putString("productAmount", productAmount);
 
-        double finalSellingPrice = setSellingPrice();
-
-        DecimalFormat newFormat = new DecimalFormat("#.##");
-        double roundedSP =  Double.valueOf(newFormat.format(finalSellingPrice));
-
-        sellingPriceTV.setText(Double.toString(roundedSP));
-
-
+        fragment.setArguments(b);
     }
+
+
 
     public void goToSettings (View view){
         Intent i=new Intent();
