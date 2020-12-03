@@ -19,9 +19,12 @@ public class AddToStoreFragment extends Fragment {
     double profit=0.0;
     double discount=0.0;
     double sellingPrice=0.0;
+    double promoSellingPrice=0.0;
     double totalCostPrice=0.0;
 
     TextView sellingPriceTV;
+    TextView promoSellingPriceTV;
+    TextView promoProfit;
     EditText productBenefit;
     EditText productDiscount;
     Button calculateButton;
@@ -33,8 +36,10 @@ public class AddToStoreFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_add_to_store, container, false);
 
         productBenefit=view.findViewById(R.id.productBenefit);
+        promoProfit=view.findViewById(R.id.promoProfit);
         productDiscount=view.findViewById(R.id.productDiscount);
         sellingPriceTV=view.findViewById(R.id.sellingPrice);
+        promoSellingPriceTV=view.findViewById(R.id.promoSellingPrice);
         calculateButton=view.findViewById(R.id.calculateButton);
 
         Bundle bundle = getArguments();
@@ -44,10 +49,15 @@ public class AddToStoreFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 double finalSellingPrice = setSellingPrice();
+                double finalPromoSellingPrice = setPromoSellingPrice();
 
                 DecimalFormat newFormat = new DecimalFormat("#.##");
                 double roundedSP =  Double.valueOf(newFormat.format(finalSellingPrice));
-                sellingPriceTV.setText(Double.toString(roundedSP));
+                sellingPriceTV.setText(" AED "+ Double.toString(roundedSP));
+
+                double roundedPSP =  Double.valueOf(newFormat.format(finalPromoSellingPrice));
+                if(roundedPSP!=0.0){
+                promoSellingPriceTV.setText(" AED "+ Double.toString(roundedPSP));}
 
             }
         });
@@ -64,12 +74,21 @@ public class AddToStoreFragment extends Fragment {
             profit=Double.parseDouble(String.valueOf(productBenefit.getText()));
 
         sellingPrice=(totalCostPrice)+((profit/100)*totalCostPrice);
-
-        if(!productDiscount.getText().toString().isEmpty()){
-            discount=Double.parseDouble(String.valueOf(productDiscount.getText()));
-            sellingPrice=sellingPrice-(sellingPrice*(discount/100));
-        }
         return sellingPrice;
 
     }
+
+    public double setPromoSellingPrice(){
+
+        if(!productDiscount.getText().toString().isEmpty()){
+            discount=Double.parseDouble(String.valueOf(productDiscount.getText()));
+            profit=Double.parseDouble(String.valueOf(productBenefit.getText()));
+            profit=profit-discount;
+            promoProfit.setText(Double.toString(profit));
+            promoSellingPrice=sellingPrice-(sellingPrice*(discount/100));
+        }
+        return promoSellingPrice;
+
+    }
+
 }

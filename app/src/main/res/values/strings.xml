@@ -42,12 +42,12 @@ revision in material is brought up, we will try to provide a notice prior to at 
     <string name="supplier_name">Supplier Name</string>
     <string name="calculate_selling_price">Calculate Selling Price</string>
     <string name="unit_price_aed">Unit Price: AED</string>
-    <string name="selling_price_per_unit_aed">Selling Price Per Unit: AED</string>
-    <string name="set_discount">Set Discount (%):</string>
+    <string name="selling_price_per_unit_aed">Original Selling Price Per Unit: </string>
+    <string name="set_discount">Promotional Discount (%):</string>
     <string name="product_tax_aed">Product Tax: AED</string>
     <string name="total_marketing_cost_aed">Total Marketing Cost: AED</string>
     <string name="cost_price_per_unit_aed">Cost Price Per Unit: AED</string>
-    <string name="amount_of_benefit">Amount of Benefit (%):</string>
+    <string name="amount_of_benefit">Profit (%):</string>
     <string name="units_available_in_stock">Units Available in Stock:</string>
     <string name="cost_for_storage_and_utilities_aed">Cost for storage and utilities: AED</string>
     <string name="shipping_price_aed">Shipping Price: AED</string>
