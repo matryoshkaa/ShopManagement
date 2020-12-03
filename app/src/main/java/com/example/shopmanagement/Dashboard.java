@@ -16,6 +16,8 @@ public class Dashboard extends AppCompatActivity {
 
 
 
+
+
     }
 
     public void goToSettings (View view){
