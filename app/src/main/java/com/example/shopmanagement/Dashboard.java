@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -26,7 +25,7 @@ public class Dashboard extends AppCompatActivity {
 
     public void goToProducts (View view){
         Intent i=new Intent();
-        startActivity(new Intent(Dashboard.this, Products.class));
+        startActivity(new Intent(Dashboard.this, ProductsActivity.class));
     }
 
     public void goToTransactions (View view){
