@@ -35,6 +35,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 //Activity where products bought from supplier is displayed, user can set price/discount details and upload it to the shop
@@ -88,9 +89,12 @@ public class Stock extends AppCompatActivity {
             }
         };
 
+//TEMPORARY DELETE LATER
+        userId = "GUbm4ERwNTdm3TekcQ0UrpRAZYs1";
+
 
         //checking if product list is empty
-        db.collection("Users")
+       db.collection("Users")
                 .document(userId)
                 .collection("Stock")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -100,7 +104,7 @@ public class Stock extends AppCompatActivity {
                     if(task.getResult().size()==0)
                         Toast.makeText(Stock.this, "No products to display", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
+                    Log.d("TAG", "Error getting documents: ", task.getException());
                 }
             }
         });

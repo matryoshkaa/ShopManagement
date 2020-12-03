@@ -16,6 +16,7 @@
         <activity android:name=".Stock" />
         <activity android:name=".SalesReports" />
         <activity android:name=".Store" />
+        <activity android:name=".SellItem" />
         <activity android:name=".Transactions" />
         <activity android:name=".Products" />
         <activity android:name=".UserProfile" />
