@@ -223,9 +223,6 @@ public class SellItem extends AppCompatActivity {
     }
 
 
-
-
-
     public void goToSettings (View view){
         Intent i=new Intent();
         startActivity(new Intent(SellItem.this, Settings.class));

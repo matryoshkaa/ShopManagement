@@ -40,14 +40,14 @@ public class StockDisplayAdapter extends ArrayAdapter<StockDisplay> {
         TextView supplier = (TextView) listItem.findViewById(R.id.supplierName);
         supplier.setText(currentProduct.getSupplierName());
 
+        TextView prodId = (TextView) listItem.findViewById(R.id.productId);
+        prodId.setText(currentProduct.getProductId());
+
         TextView unitPrice = (TextView) listItem.findViewById(R.id.unitPrice);
         unitPrice.setText(Double.toString(currentProduct.getUnitPrice()));
 
-        TextView prodTax = (TextView) listItem.findViewById(R.id.tax);
-        prodTax.setText(Double.toString(currentProduct.getProductTax()));
-
-        TextView prodShipping = (TextView) listItem.findViewById(R.id.shippingPrice);
-        prodShipping.setText(Double.toString(currentProduct.getShippingPrice()));
+        TextView prodStock = (TextView) listItem.findViewById(R.id.numberInStock);
+        prodStock.setText(currentProduct.getProductStock());
 
         return listItem;
     }

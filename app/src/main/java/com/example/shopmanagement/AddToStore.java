@@ -41,11 +41,9 @@ public class AddToStore extends AppCompatActivity {
 
     Map<String, Object> map;
 
-
     double totalProductCostPrice=0.0;
     double marketingExpenses=0.0;
     double storageExpenses=0.0;
-
 
     String imageUrl;
     String prodName;
@@ -59,6 +57,9 @@ public class AddToStore extends AppCompatActivity {
     String shipping;
     String productAmount;
 
+    String userId;
+    String documentId;
+    String chosenProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +67,8 @@ public class AddToStore extends AppCompatActivity {
         setContentView(R.layout.activity_add_to_store);
 
         Intent i = getIntent();
-        String chosenProduct=i.getStringExtra("prodName");
-        String userId=i.getStringExtra("userId");
+        chosenProduct=i.getStringExtra("prodId");
+        userId=i.getStringExtra("userId");
 
         productName=findViewById(R.id.prodName);
         supplier=findViewById(R.id.supplierName);
@@ -84,9 +85,24 @@ public class AddToStore extends AppCompatActivity {
                 .document(userId)
                 .collection("Stock");
 
+        //getting document Id
+        ref.whereEqualTo("productId",chosenProduct).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        map = document.getData();
+                        documentId =document.getId();
+                    }
+                } else {
+                    System.out.println("Error getting documents: ");
+                }
+            }
+        });
+
 
         //grabbing data from firestore to display in list
-        ref.whereEqualTo("productName",chosenProduct).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        ref.whereEqualTo("productId",chosenProduct).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -101,7 +117,6 @@ public class AddToStore extends AppCompatActivity {
                         imageUrl=map.get("productImage").toString();
 
                         imageRetrieval(imageUrl);
-
                         setDetails(prodName, supplierName,price,tax,shipping,productAmount);
 
                     }
@@ -122,15 +137,20 @@ public class AddToStore extends AppCompatActivity {
                     switch (item.getItemId()) {
                         case R.id.nav_prod_info:{
                             selectedFragment = new ProdInfoFragment();
-                            sendDataToFragmentOne(selectedFragment);
+                            sendDataToProdInfoFragment(selectedFragment);
                             }
                             break;
-                        case R.id.nav_add:
+                        case R.id.nav_add:{
                             selectedFragment = new AddToStoreFragment();
-                            sendDataToFragmentTwo(selectedFragment);
+                            sendInfoToAddToStoreFragment(selectedFragment);}
                             break;
                         case R.id.nav_help:
                             selectedFragment = new ProdDescriptionFragment();
+                            break;
+                        case R.id.nav_add_for_sale:{
+                            selectedFragment = new AddForSaleFragment();
+                            sendDataToFragmentSale(selectedFragment);
+                        }
                             break;
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.info_frame,
@@ -189,15 +209,18 @@ public class AddToStore extends AppCompatActivity {
 
     }
 
-    private void sendDataToFragmentTwo(Fragment fragment)
+    private void sendInfoToAddToStoreFragment(Fragment fragment)
     {
         //sending data to product info fragment
         Bundle b = new Bundle();
         b.putDouble("totalCP", totalProductCostPrice);
+        b.putString("prodName", prodName);
+        b.putString("userId", userId);
+        b.putString("documentId", documentId);
         fragment.setArguments(b);
     }
 
-    private void sendDataToFragmentOne(Fragment fragment)
+    private void sendDataToProdInfoFragment(Fragment fragment)
     {
         //sending data to product info fragment
         Bundle b = new Bundle();
@@ -208,11 +231,26 @@ public class AddToStore extends AppCompatActivity {
         b.putDouble("marketingPrice", marketingExpenses);
         b.putDouble("storagePrice", storageExpenses);
         b.putDouble("totalCP", totalProductCostPrice);
-        b.putString("productAmount", productAmount);
+        b.putString("userId", userId);
+        b.putString("prodId", chosenProduct);
+        b.putString("documentId", documentId);
 
         fragment.setArguments(b);
     }
 
+    private void sendDataToFragmentSale(Fragment fragment)
+    {
+        //sending data to product info fragment
+        Bundle b = new Bundle();
+
+        int prodAmt=Integer.parseInt(productAmount);
+        b.putInt("productAmount", prodAmt);
+        b.putString("prodId", chosenProduct);
+        b.putString("userId", userId);
+        b.putString("documentId", documentId);
+
+        fragment.setArguments(b);
+    }
 
 
     public void goToSettings (View view){
@@ -221,6 +259,8 @@ public class AddToStore extends AppCompatActivity {
     }
 
     public void goBack (View view){
+        Intent i = new Intent();
+        setResult(RESULT_OK, i);
         finish();
     }
 }
