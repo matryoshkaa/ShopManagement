@@ -12,12 +12,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public class ProductsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
         productsList = new ArrayList<>();
-        productsDisplayAdapter = new ProductsDisplayAdapter(productsList);
+        productsDisplayAdapter = new ProductsDisplayAdapter(getApplicationContext(), productsList);
 
         productsListView = (RecyclerView)findViewById(R.id.productList);
         productsListView.setHasFixedSize(true);
@@ -49,6 +51,11 @@ public class ProductsActivity extends AppCompatActivity {
         productsListView.setAdapter(productsDisplayAdapter);
 
         mFireStore = FirebaseFirestore.getInstance();
+//        Query query = mFireStore.collection("Products");
+//        FirestoreRecyclerOptions<Products> options = new FirestoreRecyclerOptions<Products>.Builder<>()
+//                .setQuery(query, Products.class)
+//                .build();
+
         mFireStore.collection("Products").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
@@ -58,7 +65,8 @@ public class ProductsActivity extends AppCompatActivity {
 
                 for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
                     if (doc.getType() == DocumentChange.Type.ADDED) {
-                          Products products = doc.getDocument().toObject(Products.class);
+                          String productDocId = doc.getDocument().getId();
+                          Products products = doc.getDocument().toObject(Products.class).withId(productDocId);
                           productsList.add(products);
 //                        String productId = doc.getDocument().getString("productId");
 //                        String productName = doc.getDocument().getString("productName");

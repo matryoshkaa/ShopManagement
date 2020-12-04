@@ -1,8 +1,8 @@
 package com.example.shopmanagement;
 
-public class Products {
+public class Products extends ProductId {
 
-    private String productId;
+    public String productId;
     private String productName;
     private String productImage;
     private String supplierName;
