@@ -185,30 +185,11 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Product Info" />
 
-
-<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/navbar"-->
-<!--            app:menu="@menu/addtostore_navigation_menu"-->
-<!--            app:itemTextColor="@color/stock_nav"-->
-<!--            app:itemIconTint="@color/stock_nav"-->
-<!--            android:paddingTop="5dp"-->
-<!--            android:paddingBottom="5dp"-->
-<!--            android:background="#ffffff"/>-->
-
-<!--        <FrameLayout-->
-<!--            android:id="@+id/info_frame"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/navbar"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent">-->
-<!--            -->
-<!--            -->
-
-
-<!--        </FrameLayout>-->
 
     </LinearLayout>
 
