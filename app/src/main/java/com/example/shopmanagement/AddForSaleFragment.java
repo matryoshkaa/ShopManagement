@@ -304,7 +304,6 @@ public class AddForSaleFragment extends Fragment {
                         map = document.getData();
                         String amount = map.get("productAmount").toString();
                         amt=Integer.parseInt(amount);
-
                     }
                 } else {
                     System.out.println("Error getting documents: ");
