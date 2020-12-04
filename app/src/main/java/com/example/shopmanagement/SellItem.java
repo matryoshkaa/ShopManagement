@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -95,6 +96,8 @@ public class SellItem extends AppCompatActivity {
         subtract = findViewById(R.id.subtractbutton);
         amtBeingBought = findViewById(R.id.amtBeingBought);
         sell = findViewById(R.id.sellButton);
+
+
         //TEMPORARY DELETE LATER
         userId = "GUbm4ERwNTdm3TekcQ0UrpRAZYs1";
 
@@ -174,6 +177,7 @@ public class SellItem extends AppCompatActivity {
                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    //adding to transaction
                                     Map<String, Object> transaction = new HashMap<>();
                                     transaction.put("Item Name", productName.getText().toString());
                                     transaction.put("Supplier", supplierName.getText().toString());
@@ -199,6 +203,46 @@ public class SellItem extends AppCompatActivity {
                                                 }
                                             });
 
+
+                                    //adding to reports
+                                    final DocumentReference docIdRef = db.collection("Users").document(finalUserId).collection("Reports").document(getDate());
+                                    docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+                                                    double agg = Double.parseDouble(document.get("Aggregate").toString()) +totalPrice;
+                                                    Map<String, Object> updateAmount = new HashMap<>();
+                                                    updateAmount.put("Aggregate", Double.toString(agg));
+                                                    docIdRef.set(updateAmount, SetOptions.merge());
+                                                } else {
+                                                    Map<String, Object> updateAmount = new HashMap<>();
+                                                    updateAmount.put("Date", getDateTime().substring(0,10));
+                                                    updateAmount.put("Aggregate", Double.toString(totalPrice));
+                                                    docIdRef.set(updateAmount, SetOptions.merge());
+                                                }
+                                            } else {
+                                            }
+                                        }
+                                    });
+
+                                    db.collection("Users")
+                                            .document(finalUserId)
+                                            .collection("Reports")
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        }
+                                                    } else {
+
+                                                    }
+                                                }
+                                            });
+
                                     //subtracting from store amount
                                     final int newAmt = Integer.parseInt(productAmount.getText().toString()) - Integer.parseInt(amtBeingBought.getText().toString());
                                     ref.whereEqualTo("productId", itemId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -219,6 +263,7 @@ public class SellItem extends AppCompatActivity {
                                                     Map<String, Object> updateAmount = new HashMap<>();
                                                     updateAmount.put("prodAmount", Integer.toString(newAmt));
                                                     updateDoc.set(updateAmount, SetOptions.merge());
+
 
                                                     TextView amt = findViewById(R.id.amt);
                                                     amt.setText(Integer.toString(newAmt));
@@ -289,6 +334,12 @@ public class SellItem extends AppCompatActivity {
 
     private String getDateTime() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    private String getDate() {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new Date();
         return dateFormat.format(date);
     }

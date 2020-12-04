@@ -12,6 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.text.DecimalFormat;
 
 public class AddToStoreFragment extends Fragment {
@@ -44,6 +49,7 @@ public class AddToStoreFragment extends Fragment {
 
         Bundle bundle = getArguments();
         totalCostPrice=bundle.getDouble("totalCP");
+
 
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
