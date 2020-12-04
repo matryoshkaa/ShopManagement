@@ -1,19 +1,81 @@
 package com.example.shopmanagement;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 //Activity where user can search for product and purchase it for the store
 
 public class ProductsActivity extends AppCompatActivity {
 
+
+    private static final String TAG = "Firelog";
+    private RecyclerView productsListView;
+    ArrayList<Products> productsList;
+    ProductsDisplayAdapter productsDisplayAdapter;
+
+    private FirebaseFirestore mFireStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
+        productsList = new ArrayList<>();
+        productsDisplayAdapter = new ProductsDisplayAdapter(productsList);
+
+        productsListView = (RecyclerView)findViewById(R.id.productList);
+        productsListView.setHasFixedSize(true);
+        productsListView.setLayoutManager(new LinearLayoutManager(this));
+        productsListView.setAdapter(productsDisplayAdapter);
+
+        mFireStore = FirebaseFirestore.getInstance();
+        mFireStore.collection("Products").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
+                if(error != null){
+                    Log.d(TAG, "error" + error.getMessage());
+                }
+
+                for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
+                    if (doc.getType() == DocumentChange.Type.ADDED) {
+                          Products products = doc.getDocument().toObject(Products.class);
+                          productsList.add(products);
+//                        String productId = doc.getDocument().getString("productId");
+//                        String productName = doc.getDocument().getString("productName");
+//                        String productImage = doc.getDocument().getString("productImage");
+//                        int productAmount =  doc.getDocument().getLong("productAmount").intValue();
+//                        double productTax = doc.getDocument().getLong("productTax").doubleValue();
+//                        double productSellingPrice = doc.getDocument().getLong("sellingPrice").doubleValue();
+//                        double productShippingPrice = doc.getDocument().getLong("shippingPrice").doubleValue();
+//                        double productUnitPrice = doc.getDocument().getLong("unitPrice").doubleValue();
+//                        String supplierName = doc.getDocument().getString("supplierName");
+//                        Log.d(TAG, "Shipping Price: " + productShippingPrice);
+                          productsDisplayAdapter.notifyDataSetChanged();
+                    }
+
+                }
+            }
+        });
     }
 
     public void goToSettings (View view){
