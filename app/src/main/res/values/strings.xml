@@ -51,6 +51,6 @@ revision in material is brought up, we will try to provide a notice prior to at 
     <string name="units_available_in_stock">Units Available in Stock:</string>
     <string name="cost_for_storage_and_utilities_aed">Cost for storage and utilities: AED</string>
     <string name="shipping_price_aed">Shipping Price: AED</string>
-    <string name="addtostore_info">View the product details by clicking on the \'Product Details\' option or add it to your store for sale by clicking on the \'Add for Sale\' option!\n\n You can set your desired profit or even put up a discount and add it to your store!</string>
+    <string name="addtostore_info">View the product details by clicking on the \'Product Details\' option or add it to your store for sale by clicking on the \'Add for Sale\' option!\n\n You can set your desired profit or even put up a discount in the \'Price Details\' section and add the desired quantity to your store!</string>
 
 </resources>

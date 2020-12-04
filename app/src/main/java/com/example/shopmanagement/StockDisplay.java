@@ -4,6 +4,8 @@ public class StockDisplay {
 
     private String productName;
     private String supplierName;
+    private String productId;
+    private String productStock;
     private double unitPrice;
     private double productTax;
     private double shippingPrice;
@@ -13,12 +15,22 @@ public class StockDisplay {
         //empty constructor
     }
 
-    public StockDisplay(String productName,String supplierName,double unitPrice,double productTax,double shippingPrice){
+    public StockDisplay(String productName,String supplierName,String productId,double unitPrice,double productTax,double shippingPrice,String productStock){
         this.productName=productName;
         this.supplierName=supplierName;
+        this.productId=productId;
         this.unitPrice=unitPrice;
         this.productTax=productTax;
         this.shippingPrice=shippingPrice;
+        this.productStock=productStock;
+    }
+
+    public String getProductStock() {
+        return productStock;
+    }
+
+    public void setProductStock(String productStock) {
+        this.productStock = productStock;
     }
 
     public String getProductName() {
@@ -35,6 +47,14 @@ public class StockDisplay {
 
     public void setSupplierName(String supplierName) {
         this.supplierName = supplierName;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public double getUnitPrice() {

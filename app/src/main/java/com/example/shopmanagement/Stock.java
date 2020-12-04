@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -61,6 +64,11 @@ public class Stock extends AppCompatActivity {
 
     Map<String, Object> map;
 
+    String prodId;
+    String documentId;
+
+    String chosenProductToDelete;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,10 +97,6 @@ public class Stock extends AppCompatActivity {
             }
         };
 
-//TEMPORARY DELETE LATER
-        userId = "GUbm4ERwNTdm3TekcQ0UrpRAZYs1";
-
-
         //checking if product list is empty
        db.collection("Users")
                 .document(userId)
@@ -114,8 +118,98 @@ public class Stock extends AppCompatActivity {
                 .collection("Stock");
 
 
+        getDataFromDatabase();
+
+        stockListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(Stock.this, AddToStore.class);
+
+                TextView chosen = (TextView) view.findViewById(R.id.productId);
+                chosenProduct= chosen.getText().toString();
+
+                if(userId!=null)
+                    intent.putExtra("userId",userId);
+
+                intent.putExtra("prodId",chosenProduct);
+                startActivityForResult(intent,0);
+            }
+        });
+
+        stockListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                TextView chosenId = (TextView) view.findViewById(R.id.productId);
+                chosenProductToDelete= chosenId.getText().toString();
+
+                ref = db.collection("Users")
+                        .document(userId)
+                        .collection("Stock");
 
 
+                ref.whereEqualTo("productId",chosenProductToDelete).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                map = document.getData();
+                                documentId =document.getId();
+                            }
+                        } else {
+                            System.out.println("Error getting documents: ");
+                        }
+                    }
+                });
+
+                new MaterialAlertDialogBuilder(Stock.this)
+                        .setTitle("Confirm delete from stock")
+                        .setMessage("Are you sure you want to remove this product from your stock list?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                stockList.remove(position);
+                                adapter.notifyDataSetChanged();
+                                deleteFromDatabase();
+                                Toast.makeText(Stock.this, "Product has been successfully removed from your stock!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNeutralButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        })
+                        .show();
+
+                return true;
+            }
+        });
+
+
+    }
+
+    public void deleteFromDatabase(){
+
+        if(documentId!=null && !documentId.isEmpty()) {
+            db.collection("Users")
+                    .document(userId)
+                    .collection("Stock")
+                    .document(documentId).delete();
+        }
+
+
+
+
+    }
+
+    public void addToStockList(String prodName,String supplierName,String prodId,double unitPrice,double prodTax,double shippingPrice,String prodAmountInStock){
+
+        stockList.add(new StockDisplay(prodName, supplierName,prodId,unitPrice,prodTax,shippingPrice, prodAmountInStock));
+        adapter.notifyDataSetChanged();
+
+    }
+
+    public void getDataFromDatabase(){
         //grabbing data from firestore to display in list
         ref.orderBy("productName").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -128,11 +222,18 @@ public class Stock extends AppCompatActivity {
                         String price = map.get("unitPrice").toString();
                         String tax = map.get("productTax").toString();
                         String shipping = map.get("shippingPrice").toString();
+                        String prodAmountInStock = map.get("productAmount").toString();
+
+                        if(prodAmountInStock.equals("0"))
+                            prodAmountInStock="Out of Stock";
+
+                        prodId = map.get("productId").toString();
 
                         double unitPrice=Double.parseDouble(price);
                         double prodTax=Double.parseDouble(tax);
                         double shippingPrice=Double.parseDouble(shipping);
-                        addToStockList(prodName, supplierName,unitPrice,prodTax,shippingPrice);
+
+                        addToStockList(prodName, supplierName,prodId,unitPrice,prodTax,shippingPrice,prodAmountInStock);
 
                     }
                 } else {
@@ -140,32 +241,17 @@ public class Stock extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        stockListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(Stock.this, AddToStore.class);
-
-                TextView chosen = (TextView) view.findViewById(R.id.prodName);
-                chosenProduct= chosen.getText().toString();
-
-                if(userId!=null)
-                    intent.putExtra("userId",userId);
-
-                intent.putExtra("prodName",chosenProduct);
-                setResult(RESULT_OK, intent);
-                startActivity(intent);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                adapter.clear();
+                getDataFromDatabase();
             }
-        });
+        }
     }
-
-    public void addToStockList(String prodName,String supplierName,double unitPrice,double prodTax,double shippingPrice){
-
-        stockList.add(new StockDisplay(prodName, supplierName,unitPrice,prodTax,shippingPrice));
-        adapter.notifyDataSetChanged();
-
-    }
-
 
     public void goToSettings (View view){
         Intent i=new Intent();
