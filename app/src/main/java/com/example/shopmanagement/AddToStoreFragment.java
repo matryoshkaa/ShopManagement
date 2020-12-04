@@ -1,5 +1,6 @@
 package com.example.shopmanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,12 +8,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddToStoreFragment extends Fragment {
 
@@ -28,6 +43,20 @@ public class AddToStoreFragment extends Fragment {
     EditText productBenefit;
     EditText productDiscount;
     Button calculateButton;
+    Button fixPriceButton;
+
+    double finalSellingPrice=0.0;
+    double finalPromoSellingPrice=0.0;
+    double fixedSellingPrice=0.0;
+
+    String productName;
+    String userId;
+    String documentId;
+
+    CollectionReference ref;
+    DocumentReference docRef;
+    private FirebaseFirestore db;
+    Map<String, Object> map;
 
 
     @Nullable
@@ -41,15 +70,26 @@ public class AddToStoreFragment extends Fragment {
         sellingPriceTV=view.findViewById(R.id.sellingPrice);
         promoSellingPriceTV=view.findViewById(R.id.promoSellingPrice);
         calculateButton=view.findViewById(R.id.calculateButton);
+        fixPriceButton=view.findViewById(R.id.fixPrice);
 
         Bundle bundle = getArguments();
-        totalCostPrice=bundle.getDouble("totalCP");
+        if(bundle!=null) {
+            totalCostPrice = bundle.getDouble("totalCP");
+            productName = bundle.getString("prodName");
+            userId = bundle.getString("userId");
+            documentId = bundle.getString("documentId");
+        }
+
+        db = FirebaseFirestore.getInstance();
+        ref = db.collection("Users")
+                .document(userId)
+                .collection("Stock");
 
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double finalSellingPrice = setSellingPrice();
-                double finalPromoSellingPrice = setPromoSellingPrice();
+                finalSellingPrice = setSellingPrice();
+                finalPromoSellingPrice = setPromoSellingPrice();
 
                 DecimalFormat newFormat = new DecimalFormat("#.##");
                 double roundedSP =  Double.valueOf(newFormat.format(finalSellingPrice));
@@ -63,8 +103,54 @@ public class AddToStoreFragment extends Fragment {
         });
 
 
+
+        fixPriceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                double price=returnSellingPrice();
+                System.out.println("PRICE FIXED "+price);
+
+                Map<String, Double> priceMap=new HashMap<>();
+                priceMap.put("sellingPrice",price);
+
+                if(price!=0){
+                    db.collection("Users")
+                            .document(userId)
+                            .collection("Stock")
+                            .document(documentId)
+                            .set(priceMap, SetOptions.merge());
+
+                    Toast.makeText(getActivity(), "Product price has been successfully fixed!", Toast.LENGTH_SHORT).show();
+
+                }else
+                    Toast.makeText(getActivity(), "Appropriate price has not been fixed!", Toast.LENGTH_SHORT);
+
+            }
+        });
         return view;
 
+    }
+
+    public double returnSellingPrice(){
+        if(finalSellingPrice!=0.0) {
+            if (finalPromoSellingPrice == 0.0) {
+
+                //adding VAT
+                fixedSellingPrice=(finalSellingPrice*0.05)+finalSellingPrice;
+
+            } else {
+                fixedSellingPrice=(finalPromoSellingPrice*0.05)+finalPromoSellingPrice;
+
+            }
+        }
+        else
+            Toast.makeText(getActivity(),"You have not fixed the price!",Toast.LENGTH_LONG).show();
+
+        DecimalFormat newFormat = new DecimalFormat("#.##");
+        double roundedFSP =  Double.valueOf(newFormat.format(fixedSellingPrice));
+
+        return roundedFSP;
     }
 
 
@@ -82,10 +168,14 @@ public class AddToStoreFragment extends Fragment {
 
         if(!productDiscount.getText().toString().isEmpty()){
             discount=Double.parseDouble(String.valueOf(productDiscount.getText()));
+
+            if(!productBenefit.getText().toString().isEmpty()){
             profit=Double.parseDouble(String.valueOf(productBenefit.getText()));
             profit=profit-discount;
             promoProfit.setText(Double.toString(profit));
-            promoSellingPrice=sellingPrice-(sellingPrice*(discount/100));
+            promoSellingPrice=sellingPrice-(sellingPrice*(discount/100));}
+            else
+                promoSellingPrice=sellingPrice-(sellingPrice*(discount/100));
         }
         return promoSellingPrice;
 

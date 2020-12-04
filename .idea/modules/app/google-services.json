@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "701308259971",
+    "firebase_url": "https://shopmanagement-37824.firebaseio.com",
+    "project_id": "shopmanagement-37824",
+    "storage_bucket": "shopmanagement-37824.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701308259971:android:02dcc5030b8f4dc4a295b6",
+        "android_client_info": {
+          "package_name": "com.example.shopmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701308259971-gv8ra14c9ieflptc6okbq0l4lbs3nrpl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shopmanagement",
+            "certificate_hash": "496e9b80d3494fec2273947dd42ec6a399cc8a2d"
+          }
+        },
+        {
+          "client_id": "701308259971-t4bm92ll5879kt56iohai5mrjb6bukq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjNiZvgtMg9coHppPgoOgf_Z841oNwhn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701308259971-t4bm92ll5879kt56iohai5mrjb6bukq5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -156,7 +156,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
-            android:textColor="#fb0000"
+            android:padding="3dp"
+            android:textColor="#000"
             android:textSize="16dp" />
 
     </LinearLayout>
@@ -173,11 +174,26 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/round_grey_rect"
+            app:backgroundTint="#CDCDCD"
             android:fontFamily="@font/montserrat"
-            android:padding="10dp"
+            android:padding="8dp"
             android:text="@string/calculate_selling_price"
             android:textColor="#000000"
-            android:textSize="15dp" />
+            android:textSize="12dp" />
+
+        <Button
+            android:id="@+id/fixPrice"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/round_grey_rect"
+            android:fontFamily="@font/montserrat"
+            app:backgroundTint="#CDCDCD"
+            android:padding="8dp"
+            android:text="fix price"
+            android:textColor="#000000"
+            android:textSize="12dp" />
 
     </LinearLayout>
 
