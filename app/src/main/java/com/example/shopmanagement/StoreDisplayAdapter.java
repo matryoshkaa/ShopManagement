@@ -1,5 +1,6 @@
 package com.example.shopmanagement;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,9 @@ public class StoreDisplayAdapter extends ArrayAdapter<StoreDisplay> {
 
         StoreDisplay currentProduct = storeList.get(position);
 
+        TextView id = (TextView) listItem.findViewById(R.id.itemid);
+        id.setText(currentProduct.getItemId());
+
         TextView name = (TextView) listItem.findViewById(R.id.prodNameStore);
         name.setText(currentProduct.getProductName());
 
@@ -42,7 +46,17 @@ public class StoreDisplayAdapter extends ArrayAdapter<StoreDisplay> {
         sellingPrice.setText(Double.toString(currentProduct.getSellingPrice()));
 
         TextView amt = (TextView) listItem.findViewById(R.id.amt);
-        amt.setText(Integer.toString(currentProduct.getProdAmount()));
+        int amtI = currentProduct.getProdAmount();
+        if (amtI == 0)
+        {
+            amt.setTextColor(Color.parseColor("#F0473E"));
+            amt.setText("Out of Stock");
+
+        } else {
+            amt.setTextColor(Color.parseColor("#5E5D5D"));
+            amt.setText(Integer.toString(currentProduct.getProdAmount()));
+
+        }
 
 
         return listItem;

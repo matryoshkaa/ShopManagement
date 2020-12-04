@@ -2,6 +2,7 @@ package com.example.shopmanagement;
 
 public class StoreDisplay {
 
+    private String itemId;
     private String productName;
     private String supplierName;
 
@@ -13,11 +14,20 @@ public class StoreDisplay {
         //empty constructor
     }
 
-    public StoreDisplay(String prodName,String supplierName,int prodAmount,double sellingPrice){
+    public StoreDisplay(String itemId, String prodName,String supplierName,int prodAmount,double sellingPrice){
+        this.itemId=itemId;
         this.productName=prodName;
         this.supplierName=supplierName;
         this.prodAmount=prodAmount;
         this.sellingPrice=sellingPrice;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public String getProductName() {

@@ -76,7 +76,7 @@ public class Store extends AppCompatActivity {
             }
         };
 
-//TEMPORARY DELETE LATER
+        //TEMPORARY DELETE LATER
         userId = "GUbm4ERwNTdm3TekcQ0UrpRAZYs1";
 
 
@@ -110,6 +110,7 @@ public class Store extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         map = document.getData();
+                        String itemId = map.get("productId").toString();
                         String prodName = map.get("productName").toString();
                         String supplierName = map.get("supplierName").toString();
 
@@ -118,7 +119,7 @@ public class Store extends AppCompatActivity {
 
                         int prodAmountD=Integer.parseInt(prodAmount);
                         double sellingPriceD=Double.parseDouble(sellingPrice);
-                        addToStockList(prodName, supplierName, prodAmountD,sellingPriceD);
+                        addToStockList(itemId, prodName, supplierName, prodAmountD,sellingPriceD);
 
                     }
                 } else {
@@ -129,23 +130,33 @@ public class Store extends AppCompatActivity {
         storeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                TextView amtTV = (TextView) view.findViewById(R.id.amt);
+                String amt = amtTV.getText().toString();
+
+                if (amt != "Out of Stock"){
                 Intent intent = new Intent(Store.this, SellItem.class);
 
                 TextView chosen = (TextView) view.findViewById(R.id.prodNameStore);
                 chosenProduct= chosen.getText().toString();
+                TextView itemIdTV = (TextView) view.findViewById(R.id.itemid);
+                String itemId = itemIdTV.getText().toString();
                 if(userId!=null)
                     intent.putExtra("userId",userId);
 
+
                 intent.putExtra("prodName",chosenProduct);
+                intent.putExtra("prodId",itemId);
+
                 setResult(RESULT_OK, intent);
-                startActivity(intent);
+                startActivity(intent);}
             }
         });
     }
 
-    public void addToStockList(String prodName, String supplierName, Integer prodAmountD,double sellingPriceD){
+    public void addToStockList(String itemId,String prodName, String supplierName, Integer prodAmountD,double sellingPriceD){
 
-        storeList.add(new StoreDisplay(prodName, supplierName,prodAmountD,sellingPriceD));
+        storeList.add(new StoreDisplay(itemId, prodName, supplierName,prodAmountD,sellingPriceD));
         adapter.notifyDataSetChanged();
 
     }
@@ -156,6 +167,8 @@ public class Store extends AppCompatActivity {
     }
 
     public void goBack (View view){
-        finish();
+        Intent intent = new Intent(Store.this, Dashboard.class);
+        setResult(RESULT_OK, intent);
+        startActivity(intent);
     }
 }
