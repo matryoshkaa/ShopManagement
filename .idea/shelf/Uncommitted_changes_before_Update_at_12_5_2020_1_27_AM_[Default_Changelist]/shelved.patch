@@ -1,0 +1,248 @@
+Index: app/src/main/java/com/example/shopmanagement/AddToStock.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.shopmanagement;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\npublic class AddToStock extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_add_to_stock);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/shopmanagement/AddToStock.java	(revision e49ba8afd54c2fafda27f153942c29084eef7a4f)
++++ app/src/main/java/com/example/shopmanagement/AddToStock.java	(date 1607117218158)
+@@ -1,14 +1,164 @@
+ package com.example.shopmanagement;
+ 
++import android.content.Context;
++import android.content.Intent;
++import android.graphics.Bitmap;
++import android.graphics.BitmapFactory;
++import android.net.ConnectivityManager;
++import android.net.NetworkInfo;
++import android.os.AsyncTask;
+ import android.os.Bundle;
++import android.util.Log;
++import android.view.View;
++import android.widget.ImageButton;
++import android.widget.ImageView;
++import android.widget.TextView;
+ 
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
+ import androidx.appcompat.app.AppCompatActivity;
++import androidx.fragment.app.Fragment;
++
++import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.Task;
++import com.google.firebase.firestore.CollectionReference;
++import com.google.firebase.firestore.DocumentReference;
++import com.google.firebase.firestore.DocumentSnapshot;
++import com.google.firebase.firestore.EventListener;
++import com.google.firebase.firestore.FirebaseFirestore;
++import com.google.firebase.firestore.FirebaseFirestoreException;
++import com.google.firebase.firestore.QuerySnapshot;
++
++import java.io.InputStream;
++import java.util.ArrayList;
+ 
+ public class AddToStock extends AppCompatActivity {
++    private static final String TAG = "Firelog";
++    TextView productNameView;
++    TextView supplierNameView;
++    ImageView prodImageView;
++    ImageButton addToStockBtn;
++
++    private FirebaseFirestore mFireStore;
++    ArrayList<Products> productsList;
++    DocumentReference productReference;
++
++    String productName;
++    String supplierName;
++    String imageUrl;
++    double unitPrice;
++//    double sellingPrice;
++    double tax;
++    double shipping;
++    int productAmount;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_add_to_stock);
++
++        Intent i = getIntent();
++        String productId = i.getStringExtra("product_id");
++
++        productNameView = findViewById(R.id.productNameAddView);
++        supplierNameView = findViewById(R.id.supplierNameAddView);
++        prodImageView = findViewById(R.id.prodImageAddView);
++        addToStockBtn = (ImageButton) findViewById(R.id.AddtoStockButton);
++
++        mFireStore = FirebaseFirestore.getInstance();
++        mFireStore.collection("Products").document(productId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
++            @Override
++            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
++                if(task.isSuccessful()){
++                    DocumentSnapshot doc = task.getResult();
++                    productName = doc.getString("productName");
++                    supplierName = doc.getString("supplierName");
++                    unitPrice = doc.getLong("unitPrice").doubleValue();
++                    tax = doc.getLong("productTax").doubleValue();
++                    shipping = doc.getLong("shippingPrice").doubleValue();
++                    productAmount = doc.getLong("productAmount").intValue();
++                    imageUrl=doc.get("productImage").toString();
++                    imageRetrieval(imageUrl);
++
++                    setDetails(productName, supplierName);
++                }
++                else{
++                    Log.d(TAG, "Error" + task.getException().getMessage());
++                }
++            }
++        });
++    }
++
++    private void imageRetrieval(String imageUrl){
++        //image retrieval from db
++        ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
++        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
++
++        if (networkInfo != null && networkInfo.isConnected()) {
++            new AddToStock.DownloadImageTask(prodImageView).execute(imageUrl);
++        } else {
++            System.out.println("No network connection available.");
++        }
++    }
++
++    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
++        ImageView bitmapImage;
++
++        public DownloadImageTask(ImageView webImage) {
++            this.bitmapImage = webImage;
++        }
++
++        protected Bitmap doInBackground(String... urls) {
++            String webUrl = urls[0];
++            Bitmap fetchedImage = null;
++            try {
++                InputStream in = new java.net.URL(webUrl).openStream();
++                fetchedImage = BitmapFactory.decodeStream(in);
++            } catch (Exception e) {
++                Log.e("Error", e.getMessage());
++                e.printStackTrace();
++            }
++            return fetchedImage;
++        }
++
++        protected void onPostExecute(Bitmap result) {
++            bitmapImage.setImageBitmap(result);
++        }
++    }
++
++    public void setDetails(String prodName,String supplierName){
++
++        productNameView.setText(prodName);
++        supplierNameView.setText(supplierName);
++
++    }
++
++    private void sendDataToTransaction(Fragment fragment)
++    {
++        //sending data to product info fragment
++//        Bundle b = new Bundle();
++//        b.putString("unitPrice", price);
++//        b.putString("productTax", tax);
++//        b.putString("shippingPrice", shipping);
++//        b.putString("productAmount", productAmount);
++//        b.putDouble("marketingPrice", marketingExpenses);
++//        b.putDouble("storagePrice", storageExpenses);
++//        b.putDouble("totalCP", totalProductCostPrice);
++//        b.putString("productAmount", productAmount);
++//
++//        fragment.setArguments(b);
++    }
++
++    private void sendDataToStock(){
++        
++    };
++
++    public void goToSettings (View view){
++        Intent i=new Intent();
++        startActivity(new Intent(AddToStock.this, Settings.class));
++    }
++
++    public void goBack (View view){
++        finish();
+     }
+ }
+Index: app/src/main/java/com/example/shopmanagement/ProductsActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.shopmanagement;\r\n\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.LinearLayout;\r\nimport android.widget.ListView;\r\n\r\nimport com.firebase.ui.firestore.FirestoreRecyclerOptions;\r\nimport com.google.firebase.firestore.DocumentChange;\r\nimport com.google.firebase.firestore.DocumentReference;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.EventListener;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.FirebaseFirestoreException;\r\nimport com.google.firebase.firestore.Query;\r\nimport com.google.firebase.firestore.QuerySnapshot;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\n//Activity where user can search for product and purchase it for the store\r\n\r\npublic class ProductsActivity extends AppCompatActivity {\r\n\r\n\r\n    private static final String TAG = \"Firelog\";\r\n    private RecyclerView productsListView;\r\n    String productDocId;\r\n    ArrayList<Products> productsList;\r\n    ProductsDisplayAdapter productsDisplayAdapter;\r\n\r\n    private FirebaseFirestore mFireStore;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_products);\r\n        productsList = new ArrayList<>();\r\n        productsDisplayAdapter = new ProductsDisplayAdapter(getApplicationContext(), productsList);\r\n\r\n        productsListView = (RecyclerView)findViewById(R.id.productList);\r\n        productsListView.setHasFixedSize(true);\r\n        productsListView.setLayoutManager(new LinearLayoutManager(this));\r\n        productsListView.setAdapter(productsDisplayAdapter);\r\n\r\n        mFireStore = FirebaseFirestore.getInstance();\r\n//        Query query = mFireStore.collection(\"Products\");\r\n//        FirestoreRecyclerOptions<Products> options = new FirestoreRecyclerOptions<Products>.Builder<>()\r\n//                .setQuery(query, Products.class)\r\n//                .build();\r\n\r\n        mFireStore.collection(\"Products\").addSnapshotListener(new EventListener<QuerySnapshot>() {\r\n            @Override\r\n            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {\r\n                if(error != null){\r\n                    Log.d(TAG, \"error\" + error.getMessage());\r\n                }\r\n\r\n                for(DocumentChange doc: documentSnapshots.getDocumentChanges()){\r\n                    if (doc.getType() == DocumentChange.Type.ADDED) {\r\n                            productDocId = doc.getDocument().getId();\r\n                          Products products = doc.getDocument().toObject(Products.class).withId(productDocId);\r\n                          productsList.add(products);\r\n//                        String productId = doc.getDocument().getString(\"productId\");\r\n//                        String productName = doc.getDocument().getString(\"productName\");\r\n//                        String productImage = doc.getDocument().getString(\"productImage\");\r\n//                        int productAmount =  doc.getDocument().getLong(\"productAmount\").intValue();\r\n//                        double productTax = doc.getDocument().getLong(\"productTax\").doubleValue();\r\n//                        double productSellingPrice = doc.getDocument().getLong(\"sellingPrice\").doubleValue();\r\n//                        double productShippingPrice = doc.getDocument().getLong(\"shippingPrice\").doubleValue();\r\n//                        double productUnitPrice = doc.getDocument().getLong(\"unitPrice\").doubleValue();\r\n//                        String supplierName = doc.getDocument().getString(\"supplierName\");\r\n//                        Log.d(TAG, \"Shipping Price: \" + productShippingPrice);\r\n                          productsDisplayAdapter.notifyDataSetChanged();\r\n                    }\r\n\r\n                }\r\n            }\r\n        });\r\n\r\n        productsListView.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                Intent intent = new Intent(ProductsActivity.this, AddToStock.class);\r\n                intent.putExtra(\"product_id\", productDocId);\r\n                setResult(RESULT_OK, intent);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n    }\r\n\r\n    public void goToSettings (View view){\r\n        Intent i=new Intent();\r\n        startActivity(new Intent(ProductsActivity.this, Settings.class));\r\n    }\r\n\r\n    public void goBack (View view){\r\n        finish();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/shopmanagement/ProductsActivity.java	(revision e49ba8afd54c2fafda27f153942c29084eef7a4f)
++++ app/src/main/java/com/example/shopmanagement/ProductsActivity.java	(date 1607116714200)
+@@ -52,11 +52,6 @@
+         productsListView.setAdapter(productsDisplayAdapter);
+ 
+         mFireStore = FirebaseFirestore.getInstance();
+-//        Query query = mFireStore.collection("Products");
+-//        FirestoreRecyclerOptions<Products> options = new FirestoreRecyclerOptions<Products>.Builder<>()
+-//                .setQuery(query, Products.class)
+-//                .build();
+-
+         mFireStore.collection("Products").addSnapshotListener(new EventListener<QuerySnapshot>() {
+             @Override
+             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
+@@ -69,16 +64,6 @@
+                             productDocId = doc.getDocument().getId();
+                           Products products = doc.getDocument().toObject(Products.class).withId(productDocId);
+                           productsList.add(products);
+-//                        String productId = doc.getDocument().getString("productId");
+-//                        String productName = doc.getDocument().getString("productName");
+-//                        String productImage = doc.getDocument().getString("productImage");
+-//                        int productAmount =  doc.getDocument().getLong("productAmount").intValue();
+-//                        double productTax = doc.getDocument().getLong("productTax").doubleValue();
+-//                        double productSellingPrice = doc.getDocument().getLong("sellingPrice").doubleValue();
+-//                        double productShippingPrice = doc.getDocument().getLong("shippingPrice").doubleValue();
+-//                        double productUnitPrice = doc.getDocument().getLong("unitPrice").doubleValue();
+-//                        String supplierName = doc.getDocument().getString("supplierName");
+-//                        Log.d(TAG, "Shipping Price: " + productShippingPrice);
+                           productsDisplayAdapter.notifyDataSetChanged();
+                     }
+ 
+Index: app/src/main/res/layout/activity_add_to_stock.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:background=\"#F2F2F2\"\r\n    tools:context=\".AddToStore\">\r\n\r\n    <androidx.appcompat.widget.Toolbar\r\n        android:id=\"@+id/productToolbar\"\r\n        android:layout_width=\"450dp\"\r\n        android:layout_height=\"59dp\"\r\n        android:layout_marginStart=\"1dp\"\r\n        android:layout_marginLeft=\"1dp\"\r\n        android:layout_marginEnd=\"1dp\"\r\n        android:layout_marginRight=\"1dp\"\r\n        android:background=\"#8560a8\"\r\n        android:minHeight=\"?attr/actionBarSize\"\r\n        android:theme=\"?attr/actionBarTheme\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.512\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.0\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/textView\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"35dp\"\r\n        android:layout_gravity=\"center\"\r\n        android:layout_marginStart=\"172dp\"\r\n        android:layout_marginEnd=\"181dp\"\r\n        android:fontFamily=\"@font/montserrat\"\r\n        android:text=\"Add to Stock\"\r\n        android:textColor=\"#000000\"\r\n        android:textSize=\"22sp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.445\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.014\" />\r\n\r\n    <ImageButton\r\n        android:id=\"@+id/back_button\"\r\n        android:onClick=\"goBack\"\r\n        android:layout_width=\"33dp\"\r\n        android:layout_height=\"35dp\"\r\n        android:background=\"#00FFFFFF\"\r\n        android:scaleType=\"fitCenter\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toStartOf=\"@+id/textView\"\r\n        app:layout_constraintHorizontal_bias=\"0.141\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.014\"\r\n        app:srcCompat=\"@drawable/back_button\"\r\n        tools:ignore=\"VectorDrawableCompat\"\r\n        android:contentDescription=\"@string/todo\" />\r\n\r\n    <ImageButton\r\n        android:id=\"@+id/AddtoStockButton\"\r\n        android:layout_width=\"33dp\"\r\n        android:layout_height=\"35dp\"\r\n        android:layout_marginStart=\"76dp\"\r\n        android:background=\"#00FFFFFF\"\r\n        android:contentDescription=\"@string/todo\"\r\n        android:onClick=\"goToSettings\"\r\n        android:scaleType=\"fitCenter\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"@+id/toolbar\"\r\n        app:layout_constraintHorizontal_bias=\"0.723\"\r\n        app:layout_constraintStart_toEndOf=\"@+id/textView\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.022\"\r\n        app:srcCompat=\"@drawable/settings_icon\"\r\n        tools:ignore=\"VectorDrawableCompat\" />\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:id=\"@+id/outerLayout\"\r\n        android:orientation=\"vertical\"\r\n        android:padding=\"5dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@id/productToolbar\"\r\n        app:layout_constraintVertical_bias=\"0.0\"\r\n        tools:layout_editor_absoluteX=\"-11dp\">\r\n\r\n        <LinearLayout\r\n            android:id=\"@+id/firstLayout\"\r\n            android:background=\"#ffffff\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            android:orientation=\"horizontal\"\r\n            android:paddingTop=\"10dp\"\r\n            android:paddingBottom=\"10dp\"\r\n            android:weightSum=\"0.5\"\r\n            app:layout_constraintBottom_toBottomOf=\"parent\"\r\n            app:layout_constraintTop_toBottomOf=\"@id/toolbar\">\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_gravity=\"center\"\r\n                android:orientation=\"vertical\"\r\n                android:layout_weight=\"0.5\"\r\n                app:layout_constraintBottom_toBottomOf=\"parent\"\r\n                app:layout_constraintTop_toBottomOf=\"@id/outerLayout\">\r\n\r\n                <TextView\r\n                    android:id=\"@+id/productNameAddView\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginStart=\"8dp\"\r\n                    android:ellipsize=\"end\"\r\n                    android:fontFamily=\"@font/montserrat\"\r\n                    android:gravity=\"start\"\r\n                    android:padding=\"3dp\"\r\n                    android:text=\"@string/productname\"\r\n                    android:textColor=\"#000\"\r\n                    android:textSize=\"22dp\"\r\n                    tools:layout_editor_absoluteY=\"0dp\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/supplierNameAddView\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"0dp\"\r\n                    android:layout_marginStart=\"8dp\"\r\n                    android:layout_marginTop=\"2dp\"\r\n                    android:layout_marginBottom=\"5dp\"\r\n                    android:layout_weight=\"0.98\"\r\n                    android:ellipsize=\"end\"\r\n                    android:fontFamily=\"@font/montserrat\"\r\n                    android:gravity=\"left\"\r\n                    android:maxLines=\"1\"\r\n                    android:padding=\"3dp\"\r\n                    android:text=\"@string/supplier_name\"\r\n                    android:textColor=\"#A6000000\"\r\n                    android:textSize=\"18sp\"\r\n                    app:layout_constraintVertical_bias=\"0.0\" />\r\n            </LinearLayout>\r\n\r\n\r\n            <ImageView\r\n                android:layout_width=\"150dp\"\r\n                android:layout_height=\"150dp\"\r\n                android:layout_weight=\"1\"\r\n                android:id=\"@+id/prodImageAddView\"\r\n                android:contentDescription=\"TODO\" />\r\n\r\n\r\n        </LinearLayout>\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"horizontal\"\r\n            android:weightSum=\"1\"\r\n            android:layout_marginTop=\"10sp\">\r\n\r\n            <TextView\r\n                android:layout_width=\"283dp\"\r\n                android:layout_height=\"match_parent\"\r\n                android:layout_gravity=\"start\"\r\n                android:layout_weight=\"0.25\"\r\n                android:fontFamily=\"@font/montserrat\"\r\n                android:text=\"@string/add_to_stock\"\r\n                android:textColor=\"#000\"\r\n                android:textSize=\"15sp\" />\r\n\r\n            <ImageButton\r\n                android:id=\"@+id/settings_button\"\r\n                android:layout_width=\"93dp\"\r\n                android:layout_height=\"36dp\"\r\n                android:layout_weight=\"0.75\"\r\n                android:background=\"#00FFFFFF\"\r\n                android:contentDescription=\"@string/add_to_stock_img\"\r\n                android:onClick=\"goToSettings\"\r\n                android:scaleType=\"fitCenter\"\r\n                app:srcCompat=\"@drawable/add_to_store\"\r\n                tools:ignore=\"VectorDrawableCompat\" />\r\n\r\n        </LinearLayout>\r\n\r\n\r\n\r\n<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->\r\n<!--            android:layout_width=\"match_parent\"-->\r\n<!--            android:layout_height=\"wrap_content\"-->\r\n<!--            android:id=\"@+id/navbar\"-->\r\n<!--            app:menu=\"@menu/addtostore_navigation_menu\"-->\r\n<!--            app:itemTextColor=\"@color/stock_nav\"-->\r\n<!--            app:itemIconTint=\"@color/stock_nav\"-->\r\n<!--            android:paddingTop=\"5dp\"-->\r\n<!--            android:paddingBottom=\"5dp\"-->\r\n<!--            android:background=\"#ffffff\"/>-->\r\n\r\n<!--        <FrameLayout-->\r\n<!--            android:id=\"@+id/info_frame\"-->\r\n<!--            android:layout_width=\"match_parent\"-->\r\n<!--            android:layout_height=\"wrap_content\"-->\r\n<!--            app:layout_constraintTop_toBottomOf=\"@id/navbar\"-->\r\n<!--            app:layout_constraintBottom_toBottomOf=\"parent\">-->\r\n<!--            -->\r\n<!--            -->\r\n\r\n\r\n<!--        </FrameLayout>-->\r\n\r\n    </LinearLayout>\r\n\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_add_to_stock.xml	(revision e49ba8afd54c2fafda27f153942c29084eef7a4f)
++++ app/src/main/res/layout/activity_add_to_stock.xml	(date 1607113077044)
+@@ -61,7 +61,7 @@
+         android:contentDescription="@string/todo" />
+ 
+     <ImageButton
+-        android:id="@+id/AddtoStockButton"
++        android:id="@+id/settings_button"
+         android:layout_width="33dp"
+         android:layout_height="35dp"
+         android:layout_marginStart="76dp"
+@@ -149,7 +149,7 @@
+                 android:layout_height="150dp"
+                 android:layout_weight="1"
+                 android:id="@+id/prodImageAddView"
+-                android:contentDescription="TODO" />
++                android:contentDescription="Product Image" />
+ 
+ 
+         </LinearLayout>
+@@ -172,7 +172,7 @@
+                 android:textSize="15sp" />
+ 
+             <ImageButton
+-                android:id="@+id/settings_button"
++                android:id="@+id/AddtoStockButton"
+                 android:layout_width="93dp"
+                 android:layout_height="36dp"
+                 android:layout_weight="0.75"
