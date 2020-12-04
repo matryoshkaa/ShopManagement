@@ -65,14 +65,14 @@
                 <ImageView
                     android:id="@+id/unitVector"
                     android:layout_width="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerInside"
-                    android:layout_weight="0.02"
+                    android:layout_gravity="center"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="4dp"
+                    android:layout_weight="0.02"
                     android:padding="2dp"
-                    app:srcCompat="@drawable/unit_price"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/ic_baseline_attach_money_24_blue"
                     tools:ignore="VectorDrawableCompat" />
 
 
@@ -96,6 +96,14 @@
                     android:text="12"
                     android:textSize="14dp" />
 
+                <TextView
+                    android:id="@+id/itemid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.02"
+                    android:text="id"
+                    android:visibility="invisible" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -108,14 +116,14 @@
                 <ImageView
                     android:id="@+id/amtVector"
                     android:layout_width="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerInside"
-                    android:layout_weight="0.02"
+                    android:layout_gravity="center"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="4dp"
+                    android:layout_weight="0.02"
                     android:padding="2dp"
-                    app:srcCompat="@drawable/tax_vector"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/ic_baseline_add_circle_24_blue"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
