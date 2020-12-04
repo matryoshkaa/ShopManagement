@@ -167,11 +167,7 @@ public class AddForSaleFragment extends Fragment {
 
 
         boolean chk;
-        System.out.println("two potato");
-
         chk=checkIfItemExistsInStore();
-
-        System.out.println("one potato");
         if(!chk) {
             db.collection("Users")
                     .document(userId)
@@ -209,22 +205,16 @@ public class AddForSaleFragment extends Fragment {
                         map = document.getData();
                         checkAmount = map.get("prodAmount").toString();
                         storeItemDocumentId=document.getId();
-                        System.out.println("INSIDE CHECK TRUE");
-                        System.out.println("YOU potato");
                     }
                     check=true;
-                    System.out.println("NO U potato");
+
                 }
-                else if(check==false)
-                    System.out.println("NO");
                 else {
                     System.out.println("Error getting documents: ");
                     check=false;
-                    System.out.println("INSIDE CHECK FALSE");
                 }
             }
         });
-
 
         return check;
 
