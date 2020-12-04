@@ -33,6 +33,7 @@ public class ProductsActivity extends AppCompatActivity {
 
     private static final String TAG = "Firelog";
     private RecyclerView productsListView;
+    String productDocId;
     ArrayList<Products> productsList;
     ProductsDisplayAdapter productsDisplayAdapter;
 
@@ -65,7 +66,7 @@ public class ProductsActivity extends AppCompatActivity {
 
                 for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
                     if (doc.getType() == DocumentChange.Type.ADDED) {
-                          String productDocId = doc.getDocument().getId();
+                            productDocId = doc.getDocument().getId();
                           Products products = doc.getDocument().toObject(Products.class).withId(productDocId);
                           productsList.add(products);
 //                        String productId = doc.getDocument().getString("productId");
@@ -82,6 +83,16 @@ public class ProductsActivity extends AppCompatActivity {
                     }
 
                 }
+            }
+        });
+
+        productsListView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductsActivity.this, AddToStock.class);
+                intent.putExtra("product_id", productDocId);
+                setResult(RESULT_OK, intent);
+                startActivity(intent);
             }
         });
     }

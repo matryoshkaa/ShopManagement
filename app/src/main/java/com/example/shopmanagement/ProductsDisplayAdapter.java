@@ -2,6 +2,7 @@ package com.example.shopmanagement;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,12 +48,15 @@ public class ProductsDisplayAdapter extends RecyclerView.Adapter<ProductsDisplay
 
         final String productDocId = productsList.get(position).productId;
 
-        holder.myView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Product id" + productDocId, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.myView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(context, AddToStock.class);
+//                intent.putExtra("product_id", productDocId);
+//
+////                Toast.makeText(context, "Product id" + productDocId, Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override

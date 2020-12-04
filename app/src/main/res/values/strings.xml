@@ -53,5 +53,7 @@ revision in material is brought up, we will try to provide a notice prior to at 
     <string name="shipping_price_aed">Shipping Price: AED</string>
     <string name="addtostore_info">View the product details by clicking on the \'Product Details\' option or add it to your store for sale by clicking on the \'Add for Sale\' option!\n\n You can set your desired profit or even put up a discount and add it to your store!</string>
     <string name="search">Search</string>
+    <string name="add_to_stock">Add to Stock</string>
+    <string name="add_to_stock_img">Add to Stock</string>
 
 </resources>
