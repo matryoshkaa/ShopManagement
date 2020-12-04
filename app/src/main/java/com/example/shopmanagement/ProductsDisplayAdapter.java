@@ -53,7 +53,7 @@ public class ProductsDisplayAdapter extends RecyclerView.Adapter<ProductsDisplay
 //            public void onClick(View view) {
 //                Intent intent = new Intent(context, AddToStock.class);
 //                intent.putExtra("product_id", productDocId);
-//
+//                
 ////                Toast.makeText(context, "Product id" + productDocId, Toast.LENGTH_SHORT).show();
 //            }
 //        });

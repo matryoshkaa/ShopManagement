@@ -52,11 +52,6 @@ public class ProductsActivity extends AppCompatActivity {
         productsListView.setAdapter(productsDisplayAdapter);
 
         mFireStore = FirebaseFirestore.getInstance();
-//        Query query = mFireStore.collection("Products");
-//        FirestoreRecyclerOptions<Products> options = new FirestoreRecyclerOptions<Products>.Builder<>()
-//                .setQuery(query, Products.class)
-//                .build();
-
         mFireStore.collection("Products").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
@@ -69,16 +64,6 @@ public class ProductsActivity extends AppCompatActivity {
                             productDocId = doc.getDocument().getId();
                           Products products = doc.getDocument().toObject(Products.class).withId(productDocId);
                           productsList.add(products);
-//                        String productId = doc.getDocument().getString("productId");
-//                        String productName = doc.getDocument().getString("productName");
-//                        String productImage = doc.getDocument().getString("productImage");
-//                        int productAmount =  doc.getDocument().getLong("productAmount").intValue();
-//                        double productTax = doc.getDocument().getLong("productTax").doubleValue();
-//                        double productSellingPrice = doc.getDocument().getLong("sellingPrice").doubleValue();
-//                        double productShippingPrice = doc.getDocument().getLong("shippingPrice").doubleValue();
-//                        double productUnitPrice = doc.getDocument().getLong("unitPrice").doubleValue();
-//                        String supplierName = doc.getDocument().getString("supplierName");
-//                        Log.d(TAG, "Shipping Price: " + productShippingPrice);
                           productsDisplayAdapter.notifyDataSetChanged();
                     }
 
