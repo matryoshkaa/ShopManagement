@@ -4,34 +4,36 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.screen.portrait" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddToStore"></activity>
-        <activity android:name=".Stock" />
-        <activity android:name=".SalesReports" />
-        <activity android:name=".Store" />
-        <activity android:name=".SellItem" />
-        <activity android:name=".Transactions" />
-        <activity android:name=".Products" />
-        <activity android:name=".UserProfile" />
-        <activity android:name=".FeedbackAndSupport" />
-        <activity android:name=".TermsAndCondition" />
-        <activity android:name=".Settings" />
-        <activity android:name=".Dashboard">
+        <activity android:name=".AddToStore" android:screenOrientation="portrait"/>
+        <activity android:name=".Stock" android:screenOrientation="portrait"/>
+        <activity android:name=".SalesReports" android:screenOrientation="portrait"/>
+        <activity android:name=".Store" android:screenOrientation="portrait" />
+        <activity android:name=".SellItem" android:screenOrientation="portrait" />
+        <activity android:name=".Transactions" android:screenOrientation="portrait"/>
+        <activity android:name=".Products" android:screenOrientation="portrait" />
+        <activity android:name=".UserProfile" android:screenOrientation="portrait" />
+        <activity android:name=".FeedbackAndSupport" android:screenOrientation="portrait"/>
+        <activity android:name=".TermsAndCondition" android:screenOrientation="portrait"/>
+        <activity android:name=".Settings" android:screenOrientation="portrait"/>
+        <activity android:name=".Dashboard" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Register" />
-        <activity android:name=".SignIn" />
+        <activity android:name=".Register" android:screenOrientation="portrait"/>
+        <activity android:name=".SignIn" android:screenOrientation="portrait"/>
         <activity android:name=".SplashScreen" />
     </application>
 

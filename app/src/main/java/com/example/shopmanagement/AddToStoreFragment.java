@@ -121,7 +121,7 @@ public class AddToStoreFragment extends Fragment {
                             .document(documentId)
                             .set(priceMap, SetOptions.merge());
 
-                    Toast.makeText(getActivity(), "Product price has been successfully fixed!", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), "Product price has been successfully fixed!", Toast.LENGTH_SHORT).show();
 
                 }else
                     Toast.makeText(getActivity(), "Appropriate price has not been fixed!", Toast.LENGTH_SHORT);
@@ -168,10 +168,14 @@ public class AddToStoreFragment extends Fragment {
 
         if(!productDiscount.getText().toString().isEmpty()){
             discount=Double.parseDouble(String.valueOf(productDiscount.getText()));
+
+            if(!productBenefit.getText().toString().isEmpty()){
             profit=Double.parseDouble(String.valueOf(productBenefit.getText()));
             profit=profit-discount;
             promoProfit.setText(Double.toString(profit));
-            promoSellingPrice=sellingPrice-(sellingPrice*(discount/100));
+            promoSellingPrice=sellingPrice-(sellingPrice*(discount/100));}
+            else
+                promoSellingPrice=sellingPrice-(sellingPrice*(discount/100));
         }
         return promoSellingPrice;
 
