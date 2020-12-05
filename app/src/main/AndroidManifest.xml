@@ -13,11 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".AddToStore"></activity>
+        <activity android:name=".AddToStock"></activity>
         <activity android:name=".Stock" />
         <activity android:name=".SalesReports" />
         <activity android:name=".Store" />
         <activity android:name=".Transactions" />
-        <activity android:name=".Products" />
+        <activity android:name=".ProductsActivity" />
         <activity android:name=".UserProfile" />
         <activity android:name=".FeedbackAndSupport" />
         <activity android:name=".TermsAndCondition" />

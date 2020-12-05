@@ -20,69 +20,44 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProductsDisplayAdapter extends RecyclerView.Adapter<ProductsDisplayAdapter.ViewHolder> {
+public class ProductsDisplayAdapter extends ArrayAdapter<Products>{
 
-    public List <Products> productsList;
+    public List <Products> productsList = new ArrayList<>();
+    String productDocId;
     public Context context;
-    public ProductsDisplayAdapter(Context context, List<Products> productList){
-        this.productsList = productList;
+    public ProductsDisplayAdapter(Context context,  ArrayList<Products> list){
+        super(context, 0 , list);
+        this.productsList = list;
         this.context = context;
+
     }
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_products_list_item, parent, false);
-        return new ViewHolder(view);
-    }
+
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.productText.setText(productsList.get(position).getProductName());
-        holder.supplierText.setText(productsList.get(position).getSupplierName());
-        holder.priceText.setText(Double.toString( productsList.get(position).getUnitPrice()));
-        holder.shippingText.setText(Double.toString(productsList.get(position).getShippingPrice()));
-        holder.taxText.setText(Double.toString(productsList.get(position).getProductTax()));
-        GlideApp.with(holder.image.getContext()).load(productsList.get(position).getProductImage()).into(holder.image);
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        final String productDocId = productsList.get(position).productId;
+        View listItem = convertView;
 
-//        holder.myView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(context, AddToStock.class);
-//                intent.putExtra("product_id", productDocId);
-//                
-////                Toast.makeText(context, "Product id" + productDocId, Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        if(listItem == null)
+            listItem = LayoutInflater.from(context).inflate(R.layout.activity_products_list_item, parent, false);
+
+        Products currentProduct = productsList.get(position);
+
+        TextView productText = (TextView)listItem.findViewById(R.id.productName);
+        TextView supplierText = (TextView)listItem.findViewById(R.id.supplierName);
+        TextView priceText = (TextView)listItem.findViewById(R.id.productUnitPrice);
+        TextView taxText = (TextView)listItem.findViewById(R.id.productTaxAmount);
+        TextView shippingText = (TextView)listItem.findViewById(R.id.productShippingPrice);
+
+        productText.setText(currentProduct.getProductName());
+        supplierText.setText(currentProduct.getSupplierName());
+        priceText.setText(Double.toString( currentProduct.getUnitPrice()));
+        shippingText.setText(Double.toString(currentProduct.getShippingPrice()));
+        taxText.setText(Double.toString(currentProduct.getProductTax()));
+
+        return listItem;
     }
 
-    @Override
-    public int getItemCount() {
-        return productsList.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        View myView;
-        public ImageView image;
-        public TextView productText;
-        public TextView supplierText;
-        public TextView priceText;
-        public TextView taxText;
-        public TextView shippingText;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            myView = itemView;
-
-            image = (ImageView)myView.findViewById(R.id.productImage);
-            productText = (TextView)myView.findViewById(R.id.productName);
-            supplierText = (TextView)myView.findViewById(R.id.supplierName);
-            priceText = (TextView)myView.findViewById(R.id.productUnitPrice);
-            taxText = (TextView)myView.findViewById(R.id.productTaxAmount);
-            shippingText = (TextView)myView.findViewById(R.id.productShippingPrice);
-        }
-    }
 
 }

@@ -77,17 +77,7 @@
         tools:ignore="VectorDrawableCompat"
         android:contentDescription="@string/todo" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/heading_label"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="30dp"-->
-<!--        android:layout_marginLeft="30dp"-->
-<!--        android:layout_marginTop="30dp"-->
-<!--        android:fontFamily="@font/nunito_bold"-->
-<!--        android:text="@string/product_search"-->
-<!--        android:textColor="#555555"-->
-<!--        android:textSize="24sp" />-->
+
 
     <EditText
         android:id="@+id/search_field"
@@ -113,17 +103,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
         android:id="@+id/productList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.148" />
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -16,9 +17,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,16 +37,21 @@ public class AddToStock extends AppCompatActivity {
 
     TextView productNameView;
     TextView supplierNameView;
-    ImageView prodImageView;
-    ImageButton addToStockBtn;
+    ImageView productImageView;
+
+    String productDocumentId;
+
+
     String productName;
     String supplierName;
     String imageUrl;
+
+
     double unitPrice;
-//    double sellingPrice;
     double tax;
     double shipping;
     int productAmount;
+    double initialCostPrice = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +59,21 @@ public class AddToStock extends AppCompatActivity {
         setContentView(R.layout.activity_add_to_stock);
 
         Intent i = getIntent();
-        String productId = i.getStringExtra("product_id");
+        productDocumentId = i.getStringExtra("product_id");
 
-        productNameView = findViewById(R.id.productNameAddView);
-        supplierNameView = findViewById(R.id.supplierNameAddView);
-        prodImageView = findViewById(R.id.prodImageAddView);
-        addToStockBtn = (ImageButton) findViewById(R.id.AddtoStockButton);
+        BottomNavigationView navBar = findViewById(R.id.atsNavbar);
+        navBar.setOnNavigationItemSelectedListener(navListener);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.atsInfoFrame,
+                new ProdDescriptionFragment()).commit();
+
+        productNameView = findViewById(R.id.atsProductName);
+        supplierNameView = findViewById(R.id.atsSupplierName);
+        productImageView = findViewById(R.id.atsProdImageView);
+//        addToStockBtn = (ImageButton) findViewById(R.id.AddtoStockButton);
 
         mFireStore = FirebaseFirestore.getInstance();
-        mFireStore.collection("Products").document(productId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        mFireStore.collection("Products").document(productDocumentId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
@@ -73,7 +87,7 @@ public class AddToStock extends AppCompatActivity {
                     imageUrl=doc.get("productImage").toString();
                     imageRetrieval(imageUrl);
 
-                    setDetails(productName, supplierName);
+                    setDetails(productName, supplierName, unitPrice, tax, shipping, productAmount);
                 }
                 else{
                     Log.d(TAG, "Error" + task.getException().getMessage());
@@ -82,13 +96,40 @@ public class AddToStock extends AppCompatActivity {
         });
     }
 
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment = null;
+                    switch (item.getItemId()) {
+                        case R.id.ats_nav_help:
+                            selectedFragment = new ProdDescriptionFragment();
+                            break;
+                        case R.id.ats_nav_prod_info: {
+                            selectedFragment = new atsProductInfoFragment();
+                            sendDataToProdInfoFragment(selectedFragment);
+                        }
+                        break;
+
+                        case R.id.ats_nav_buy: {
+                            selectedFragment = new AddToStockFragment();
+                            sendInfoToAddToStockFragment(selectedFragment);
+                        }
+                        break;
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.atsInfoFrame,
+                            selectedFragment).commit();
+                    return true;
+                }
+            };
+
     private void imageRetrieval(String imageUrl){
         //image retrieval from db
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            new AddToStock.DownloadImageTask(prodImageView).execute(imageUrl);
+            new AddToStock.DownloadImageTask(productImageView).execute(imageUrl);
         } else {
             System.out.println("No network connection available.");
         }
@@ -119,13 +160,50 @@ public class AddToStock extends AppCompatActivity {
         }
     }
 
-    public void setDetails(String prodName,String supplierName){
-
+    public void setDetails(String prodName,String supplierName, double unitPrice, double productTax, double shippingPrice, int amount){
         productNameView.setText(prodName);
         supplierNameView.setText(supplierName);
+        initialCostPrice = unitPrice + productTax + shippingPrice;
 
     }
 
+    private void sendDataToProdInfoFragment(Fragment fragment)
+    {
+        //sending data to product info fragment
+        Bundle b = new Bundle();
+        b.putDouble("unitPrice", unitPrice);
+        b.putDouble("productTax", tax);
+        b.putDouble("shippingPrice", shipping);
+        b.putInt("productAmount", productAmount);
+        b.putDouble("initialCost", initialCostPrice);
+        b.putString("product_id", productDocumentId);
+        fragment.setArguments(b);
+    }
+
+    private void sendInfoToAddToStockFragment(Fragment fragment)
+    {
+        Bundle b = new Bundle();
+        b.putDouble("unitPrice", unitPrice);
+        b.putDouble("productTax", tax);
+        b.putDouble("shippingPrice", shipping);
+        b.putDouble("initialCost", initialCostPrice);
+        b.putInt("productAmount", productAmount);
+        b.putString("product_id", productDocumentId);
+        fragment.setArguments(b);
+    }
+
+    private void sendDataToFragmentPurchase(Fragment fragment)
+    {
+        Bundle b = new Bundle();
+        b.putDouble("unitPrice", unitPrice);
+        b.putDouble("productTax", tax);
+        b.putDouble("shippingPrice", shipping);
+        b.putDouble("productAmount", productAmount);
+        b.putDouble("initialCost", initialCostPrice);
+        b.putInt("amount", productAmount);
+        b.putString("product_id", productDocumentId);
+        fragment.setArguments(b);
+    }
     public void goToSettings (View view){
         Intent i=new Intent();
         startActivity(new Intent(AddToStock.this, Settings.class));

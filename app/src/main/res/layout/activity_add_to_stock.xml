@@ -8,7 +8,7 @@
     tools:context=".AddToStore">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/productToolbar"
+        android:id="@+id/atsToolbar"
         android:layout_width="450dp"
         android:layout_height="59dp"
         android:layout_marginStart="1dp"
@@ -33,18 +33,18 @@
         android:layout_marginStart="172dp"
         android:layout_marginEnd="181dp"
         android:fontFamily="@font/montserrat"
-        android:text="Add to Stock"
+        android:text="@string/add_to_stock"
         android:textColor="#000000"
-        android:textSize="22sp"
+        android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.445"
+        app:layout_constraintHorizontal_bias="0.291"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.014" />
 
     <ImageButton
-        android:id="@+id/back_button"
+        android:id="@+id/atsBackbutton"
         android:onClick="goBack"
         android:layout_width="33dp"
         android:layout_height="35dp"
@@ -61,20 +61,19 @@
         android:contentDescription="@string/todo" />
 
     <ImageButton
-        android:id="@+id/AddtoStockButton"
+        android:id="@+id/atsSettingsButton"
         android:layout_width="33dp"
         android:layout_height="35dp"
-        android:layout_marginStart="76dp"
         android:background="#00FFFFFF"
         android:contentDescription="@string/todo"
         android:onClick="goToSettings"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintHorizontal_bias="0.723"
+        app:layout_constraintEnd_toEndOf="@+id/atsToolbar"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022"
+        app:layout_constraintVertical_bias="0.014"
         app:srcCompat="@drawable/settings_icon"
         tools:ignore="VectorDrawableCompat" />
 
@@ -85,12 +84,12 @@
         android:orientation="vertical"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productToolbar"
+        app:layout_constraintTop_toBottomOf="@id/atsToolbar"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="-11dp">
 
         <LinearLayout
-            android:id="@+id/firstLayout"
+            android:id="@+id/atsFirstLayout"
             android:background="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -111,7 +110,7 @@
                 app:layout_constraintTop_toBottomOf="@id/outerLayout">
 
                 <TextView
-                    android:id="@+id/productNameAddView"
+                    android:id="@+id/atsProductName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -125,7 +124,7 @@
                     tools:layout_editor_absoluteY="0dp" />
 
                 <TextView
-                    android:id="@+id/supplierNameAddView"
+                    android:id="@+id/atsSupplierName"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginStart="8dp"
@@ -139,7 +138,7 @@
                     android:padding="3dp"
                     android:text="@string/supplier_name"
                     android:textColor="#A6000000"
-                    android:textSize="18sp"
+                    android:textSize="18dp"
                     app:layout_constraintVertical_bias="0.0" />
             </LinearLayout>
 
@@ -148,48 +147,31 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_weight="1"
-                android:id="@+id/prodImageAddView"
-                android:contentDescription="TODO" />
+                android:id="@+id/atsProdImageView"/>
 
 
         </LinearLayout>
 
-        <LinearLayout
+        <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1"
-            android:layout_marginTop="10sp">
+            android:id="@+id/atsNavbar"
+            app:menu="@menu/addtostock_navigation_menu"
+            app:itemTextColor="@color/stock_nav"
+            app:itemIconTint="@color/stock_nav"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="#ffffff"/>
 
-            <TextView
-                android:layout_width="283dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:layout_weight="0.25"
-                android:fontFamily="@font/montserrat"
-                android:text="@string/add_to_stock"
-                android:textColor="#000"
-                android:textSize="15sp" />
-
-            <ImageButton
-                android:id="@+id/settings_button"
-                android:layout_width="93dp"
-                android:layout_height="36dp"
-                android:layout_weight="0.75"
-                android:background="#00FFFFFF"
-                android:contentDescription="@string/add_to_stock_img"
-                android:onClick="goToSettings"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/add_to_store"
-                tools:ignore="VectorDrawableCompat" />
-
-        </LinearLayout>
-
-        <TextView
+        <FrameLayout
+            android:id="@+id/atsInfoFrame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Product Info" />
+            app:layout_constraintTop_toBottomOf="@id/navbar"
+            app:layout_constraintBottom_toBottomOf="parent">
 
+
+        </FrameLayout>
 
     </LinearLayout>
 

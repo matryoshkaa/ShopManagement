@@ -98,20 +98,20 @@ public class Stock extends AppCompatActivity {
         };
 
         //checking if product list is empty
-       db.collection("Users")
+        db.collection("Users")
                 .document(userId)
                 .collection("Stock")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if(task.getResult().size()==0)
-                        Toast.makeText(Stock.this, "No products to display", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("TAG", "Error getting documents: ", task.getException());
-                }
-            }
-        });
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() == 0)
+                                Toast.makeText(Stock.this, "No products to display", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
 
         ref = db.collection("Users")
                 .document(userId)

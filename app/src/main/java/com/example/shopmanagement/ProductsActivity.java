@@ -9,49 +9,46 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 //Activity where user can search for product and purchase it for the store
 
-public class ProductsActivity extends AppCompatActivity {
+public class ProductsActivity extends AppCompatActivity{
 
+
+    FirebaseFirestore mFireStore;
 
     private static final String TAG = "Firelog";
-    private RecyclerView productsListView;
+    ListView productsListView;
     String productDocId;
     ArrayList<Products> productsList;
     ProductsDisplayAdapter productsDisplayAdapter;
 
-    private FirebaseFirestore mFireStore;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
         productsList = new ArrayList<>();
-        productsDisplayAdapter = new ProductsDisplayAdapter(getApplicationContext(), productsList);
+        productsDisplayAdapter = new ProductsDisplayAdapter(this, productsList);
 
-        productsListView = (RecyclerView)findViewById(R.id.productList);
-        productsListView.setHasFixedSize(true);
-        productsListView.setLayoutManager(new LinearLayoutManager(this));
+        productsListView = (ListView)findViewById(R.id.productList);
         productsListView.setAdapter(productsDisplayAdapter);
 
         mFireStore = FirebaseFirestore.getInstance();
+
+
         mFireStore.collection("Products").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
@@ -61,7 +58,7 @@ public class ProductsActivity extends AppCompatActivity {
 
                 for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
                     if (doc.getType() == DocumentChange.Type.ADDED) {
-                            productDocId = doc.getDocument().getId();
+                         productDocId = doc.getDocument().getId();
                           Products products = doc.getDocument().toObject(Products.class).withId(productDocId);
                           productsList.add(products);
                           productsDisplayAdapter.notifyDataSetChanged();
@@ -71,15 +68,18 @@ public class ProductsActivity extends AppCompatActivity {
             }
         });
 
-        productsListView.setOnClickListener(new View.OnClickListener() {
+
+
+        productsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ProductsActivity.this, AddToStock.class);
+//                TextView chosen = (TextView) view.findViewById(R.id.productId)''
                 intent.putExtra("product_id", productDocId);
-                setResult(RESULT_OK, intent);
                 startActivity(intent);
             }
         });
+
     }
 
     public void goToSettings (View view){
@@ -90,4 +90,6 @@ public class ProductsActivity extends AppCompatActivity {
     public void goBack (View view){
         finish();
     }
+
+
 }
